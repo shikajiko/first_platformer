@@ -10,6 +10,9 @@ enum States {IDLE, RUNNING, JUMPING, FALLING, GET_HIT, DEATH}
 # This variable keeps track of the character's current state.
 var current_state: States = States.IDLE
 var is_invincible = false
+var health = 3
+var knockback_dir
+var knockback = Vector2.ZERO
 @onready var player_sprite = $AnimatedSprite2D
 
 func _on_ready() -> void:
@@ -24,7 +27,26 @@ func _handle_horizontal_movement(direction: float) -> void:
 		player_sprite.flip_h = false
 	elif velocity.x < 0:
 		player_sprite.flip_h = true
+
+func take_damage(enemyPos: Vector2, knockback_strength: float) -> void:
+	if is_invincible:
+		return
+	
+	knockback_dir = (global_position - enemyPos).normalized()
+	knockback = knockback_dir * knockback_strength
+	_set_state(States.GET_HIT)
+	
+	health -= 1
+	#if health == 0:
+		#_set_state(States.DEATH)
+		#return
 		
+	is_invincible = true
+	await get_tree().create_timer(1)
+	is_invincible = false
+	
+
+	
 # Animation player based on current state of the player
 func _enter_state() -> void:
 	match current_state:
@@ -76,13 +98,27 @@ func _update_state(delta: float) -> void:
 			if direction:
 				_handle_horizontal_movement(direction)
 			else: 
-				velocity.x = move_toward(velocity.x, 0, 5)
+				velocity.x = move_toward(velocity.x, 0, 10)
 			if is_on_floor():
 				_set_state(States.IDLE)	
 		States.JUMPING:
 			velocity.y = JUMP_VELOCITY
 			if not is_on_floor():
 				_set_state(States.FALLING)
+		States.GET_HIT:
+			if not is_on_floor():
+				velocity.y += gravity * delta
+			
+			velocity.x = knockback.x * SPEED
+			velocity.y = max(-300, -abs(velocity.y * knockback.y))
+			knockback = lerp(knockback, Vector2.ZERO, 0.1)
+			
+			if abs(knockback.x) < 0.1 and abs(knockback.y) < 0.1 :
+				if not is_on_floor():
+					_set_state(States.FALLING)
+				else:
+					_set_state(States.IDLE)
+			
 			
 				
 func _physics_process(delta: float) -> void:
