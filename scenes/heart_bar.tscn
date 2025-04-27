@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://sw1bf4mwjwnw"]
+
+[ext_resource type="Texture2D" uid="uid://dhvrhfoduob1u" path="res://assets/sprites/heart pixel art 32x32.png" id="1_hm6s1"]
+[ext_resource type="Script" uid="uid://b2x5gufoi24l3" path="res://scripts/heart_bar.gd" id="1_otjmu"]
+
+[node name="HeartBar" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_otjmu")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_hm6s1")
+stretch_mode = 4
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_hm6s1")
+stretch_mode = 4
+
+[node name="TextureRect3" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_hm6s1")
+stretch_mode = 4

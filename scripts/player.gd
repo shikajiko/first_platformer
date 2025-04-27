@@ -16,6 +16,7 @@ var knockback_dir
 var knockback = Vector2.ZERO
 var spawn_point = Vector2(92.0, 109.0)
 @onready var player_sprite = $AnimatedSprite2D
+@onready var heart_bar = get_node("%HeartBar")
 
 func _on_ready() -> void:
 	_set_state(States.IDLE)
@@ -39,6 +40,7 @@ func take_damage(enemyPos: Vector2, knockback_strength: float) -> void:
 	_set_state(States.GET_HIT)
 	
 	health -= 1
+	heart_bar.update_simple(health)
 	is_invincible = true
 	if health == 0:
 		_set_state(States.DEATH)
@@ -141,3 +143,4 @@ func _update_state(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	_update_state(delta)	
 	move_and_slide()
+	heart_bar.update_simple(health)

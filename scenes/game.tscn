@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://dl7krmksktgp5"]
+[gd_scene load_steps=23 format=4 uid="uid://dl7krmksktgp5"]
 
 [ext_resource type="Script" uid="uid://c4ellyxw87qhk" path="res://scripts/game.gd" id="1_gee14"]
 [ext_resource type="PackedScene" uid="uid://b3mrthp4kptpw" path="res://scenes/hud.tscn" id="1_u5sy4"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://c1ps65sajbhuy" path="res://scenes/killzone.tscn" id="5_iywne"]
 [ext_resource type="AudioStream" uid="uid://vg5hfhdfgsxk" path="res://assets/sounds/coin.wav" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://d1liqu7jbp0uc" path="res://scenes/checkpoint.tscn" id="10_vtaks"]
+[ext_resource type="PackedScene" uid="uid://sw1bf4mwjwnw" path="res://scenes/heart_bar.tscn" id="11_kvpfn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iywne"]
 texture = ExtResource("2_yqjtg")
@@ -389,6 +390,14 @@ _data = {
 script = ExtResource("1_gee14")
 
 [node name="hud" parent="." instance=ExtResource("1_u5sy4")]
+
+[node name="HeartBar" parent="hud" instance=ExtResource("11_kvpfn")]
+unique_name_in_owner = true
+z_index = 10
+offset_left = 14.0
+offset_top = 6.0
+offset_right = 118.0
+offset_bottom = 46.0
 
 [node name="Checkpoints" type="Node" parent="."]
 
