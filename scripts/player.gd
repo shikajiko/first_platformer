@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 const SPEED = 130.0
 const JUMP_VELOCITY = -300.0
@@ -13,6 +14,7 @@ var is_invincible = false
 var health = 3
 var knockback_dir
 var knockback = Vector2.ZERO
+var spawn_point = Vector2(92.0, 109.0)
 @onready var player_sprite = $AnimatedSprite2D
 
 func _on_ready() -> void:
@@ -37,14 +39,23 @@ func take_damage(enemyPos: Vector2, knockback_strength: float) -> void:
 	_set_state(States.GET_HIT)
 	
 	health -= 1
-	#if health == 0:
-		#_set_state(States.DEATH)
-		#return
-		
 	is_invincible = true
+	if health == 0:
+		_set_state(States.DEATH)
+		return
+		
 	await get_tree().create_timer(1)
-	is_invincible = false
+	is_invincible = false	
+
+func update_spawn_point(checkpoint: Vector2):
+	spawn_point = checkpoint
 	
+func respawn_in_checkpoint():
+	health = 3
+	global_position = spawn_point
+	is_invincible = false
+	player_sprite.flip_h = false
+	_set_state(States.IDLE)
 
 	
 # Animation player based on current state of the player
@@ -110,6 +121,7 @@ func _update_state(delta: float) -> void:
 				velocity.y += gravity * delta
 			
 			velocity.x = knockback.x * SPEED
+			# make sure knockback on the y axis is not too much
 			velocity.y = max(-300, -abs(velocity.y * knockback.y))
 			knockback = lerp(knockback, Vector2.ZERO, 0.1)
 			
@@ -118,9 +130,14 @@ func _update_state(delta: float) -> void:
 					_set_state(States.FALLING)
 				else:
 					_set_state(States.IDLE)
+		States.DEATH:
+			velocity.x = 0
+			velocity.y += gravity * delta
+			await get_tree().create_timer(1).timeout
+			respawn_in_checkpoint()
 			
 			
-				
+# main function call
 func _physics_process(delta: float) -> void:
 	_update_state(delta)	
 	move_and_slide()

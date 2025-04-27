@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1liqu7jbp0uc"]
+
+[ext_resource type="Script" uid="uid://d1q5wclfdxsh3" path="res://scripts/checkpoint.gd" id="1_ywqth"]
+[ext_resource type="Texture2D" uid="uid://du6yuc8pi4p4g" path="res://assets/sprites/world_tileset.png" id="1_yyywg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ywqth"]
+atlas = ExtResource("1_yyywg")
+region = Rect2(128, 48, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vsimk"]
+size = Vector2(14, 14)
+
+[node name="Checkpoint" type="Area2D"]
+z_index = 5
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_ywqth")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_ywqth")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_vsimk")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
