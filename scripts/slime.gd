@@ -11,4 +11,4 @@ func _process(delta: float) -> void:
 		direction = -1
 		$AnimatedSprite2D.flip_h = true
 		
-	#position.x += SPEED * direction * delta
+	position.x += SPEED * direction * delta

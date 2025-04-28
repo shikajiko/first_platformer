@@ -10,7 +10,7 @@ enum States {IDLE, RUNNING, JUMPING, FALLING, GET_HIT, DEATH}
 
 # This variable keeps track of the character's current state.
 var current_state: States = States.IDLE
-var is_invincible = false
+var is_invincible
 var health = 3
 var knockback_dir
 var knockback = Vector2.ZERO
@@ -19,6 +19,7 @@ var spawn_point = Vector2(92.0, 109.0)
 @onready var heart_bar = get_node("%HeartBar")
 
 func _on_ready() -> void:
+	is_invincible = false
 	_set_state(States.IDLE)
 
 # Avoid redundancy
@@ -35,18 +36,20 @@ func take_damage(enemyPos: Vector2, knockback_strength: float) -> void:
 	if is_invincible:
 		return
 	
+	is_invincible = true
+	
 	knockback_dir = (global_position - enemyPos).normalized()
 	knockback = knockback_dir * knockback_strength
 	_set_state(States.GET_HIT)
 	
 	health -= 1
-	heart_bar.update_simple(health)
-	is_invincible = true
+	
 	if health == 0:
 		_set_state(States.DEATH)
 		return
 		
-	await get_tree().create_timer(1)
+	await get_tree().create_timer(10)
+	
 	is_invincible = false	
 
 func update_spawn_point(checkpoint: Vector2):
