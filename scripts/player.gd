@@ -75,6 +75,8 @@ func _enter_state() -> void:
 			player_sprite.play("hit")
 		States.DEATH:
 			player_sprite.play("death")
+			await get_tree().create_timer(1).timeout
+			respawn_in_checkpoint()
 			
 # Transition to a new state
 func _set_state(new_state: States) -> void:
@@ -135,8 +137,7 @@ func _update_state(delta: float) -> void:
 		States.DEATH:
 			velocity.x = 0
 			velocity.y += gravity * delta
-			await get_tree().create_timer(1).timeout
-			respawn_in_checkpoint()
+			
 			
 			
 # main function call
